@@ -20,19 +20,25 @@ class MainViewController: UITabBarController {
     // MARK: - Setup
     
     func prepareUI() {
-        let searchViewController = UINavigationController(rootViewController: SearchViewController())
-        let aboutViewController = UINavigationController(rootViewController: AboutViewController())
-        
-        aboutViewController.navigationBar.prefersLargeTitles = true
-        aboutViewController.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        let searchNavController = UINavigationController(rootViewController: SearchViewController())
+        let aboutNavController = UINavigationController(rootViewController: AboutViewController())
         
         
-        searchViewController.title = "Search"
-        searchViewController.tabBarItem.image = UIImage(systemName: "search")
+        aboutNavController.navigationBar.prefersLargeTitles = true
+        aboutNavController.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         
-        aboutViewController.tabBarItem.title = "About"
+        searchNavController.navigationBar.prefersLargeTitles = true
+        searchNavController.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        searchNavController.navigationBar.barTintColor = .black
         
-        setViewControllers([searchViewController, aboutViewController], animated: true)
+        
+        searchNavController.title = "Search"
+        searchNavController.tabBarItem.image = UIImage(systemName: "magnifyingglass")
+        
+        aboutNavController.tabBarItem.title = "About"
+        aboutNavController.tabBarItem.image = UIImage(systemName: "info.circle")
+        
+        setViewControllers([searchNavController, aboutNavController], animated: true)
         tabBar.barTintColor = UIColor(named: "DarkGray")
         tabBar.isTranslucent = false
     }

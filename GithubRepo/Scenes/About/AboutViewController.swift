@@ -20,6 +20,6 @@ class AboutViewController: UIViewController {
     // MARK: - Setup
     
     func prepareUI() {
-        navigationItem.title = "Github Repo App"
+        navigationItem.title = "About"
     }
 }
