@@ -10,8 +10,8 @@ import Foundation
 struct Repository: Codable {
     let id: Int64
     let name: String
-    let description: String
-    let language: String
+    let description: String?
+    let language: String?
     let forks: Int
     let stars: Int
     let owner: Owner

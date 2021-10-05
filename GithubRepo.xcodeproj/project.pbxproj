@@ -36,6 +36,8 @@
 		0DAFDE2D26E713EC009FF757 /* AboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DAFDE2B26E713EC009FF757 /* AboutViewController.xib */; };
 		0DAFDE3226E71433009FF757 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAFDE3026E71433009FF757 /* SearchViewController.swift */; };
 		0DAFDE3326E71433009FF757 /* SearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DAFDE3126E71433009FF757 /* SearchViewController.xib */; };
+		0DC0572B2708F95A00EE6F5C /* UIColors+RandomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC0572A2708F95A00EE6F5C /* UIColors+RandomColor.swift */; };
+		0DC0572E2709089200EE6F5C /* GithubFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC0572D2709089200EE6F5C /* GithubFetcher.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +72,8 @@
 		0DAFDE2B26E713EC009FF757 /* AboutViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutViewController.xib; sourceTree = "<group>"; };
 		0DAFDE3026E71433009FF757 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		0DAFDE3126E71433009FF757 /* SearchViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchViewController.xib; sourceTree = "<group>"; };
+		0DC0572A2708F95A00EE6F5C /* UIColors+RandomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColors+RandomColor.swift"; sourceTree = "<group>"; };
+		0DC0572D2709089200EE6F5C /* GithubFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubFetcher.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +92,7 @@
 			children = (
 				0D5C740A2707FAAC0052FADF /* Int+ConventIntoAFriendlyKMAbbr.swift */,
 				0D5C741027081DF70052FADF /* UIImageView+LoadFromUrl.swift */,
+				0DC0572A2708F95A00EE6F5C /* UIColors+RandomColor.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -171,6 +176,7 @@
 				0DAFDE2026E6F122009FF757 /* Application */,
 				0DAFDE2126E6F182009FF757 /* Resources */,
 				0DAFDE2226E6F1D9009FF757 /* Scenes */,
+				0DC0572C2709018400EE6F5C /* Services */,
 				0D5C74092707F9DC0052FADF /* Utils */,
 				0DAFDE1A26E6EFC6009FF757 /* Info.plist */,
 			);
@@ -230,6 +236,14 @@
 				0DAFDE2826E70D61009FF757 /* MainViewController.swift */,
 			);
 			path = Main;
+			sourceTree = "<group>";
+		};
+		0DC0572C2709018400EE6F5C /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				0DC0572D2709089200EE6F5C /* GithubFetcher.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -322,10 +336,12 @@
 				0D9A650E27050C420061CD8F /* Owner.swift in Sources */,
 				0D9A6516270529090061CD8F /* RepositoryTableViewCell.swift in Sources */,
 				0DAFDE0D26E6EFC3009FF757 /* AppDelegate.swift in Sources */,
+				0DC0572E2709089200EE6F5C /* GithubFetcher.swift in Sources */,
 				0DAFDE2C26E713EC009FF757 /* AboutViewController.swift in Sources */,
 				0DAFDE0F26E6EFC3009FF757 /* SceneDelegate.swift in Sources */,
 				0D9A651027050F140061CD8F /* SearchRepoResponse.swift in Sources */,
 				0D9A6512270522440061CD8F /* SearchResponseMock.swift in Sources */,
+				0DC0572B2708F95A00EE6F5C /* UIColors+RandomColor.swift in Sources */,
 				0D5C741127081DF70052FADF /* UIImageView+LoadFromUrl.swift in Sources */,
 				0D9A650C270508FD0061CD8F /* Repository.swift in Sources */,
 			);

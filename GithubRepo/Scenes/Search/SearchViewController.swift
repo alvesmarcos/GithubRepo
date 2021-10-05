@@ -9,11 +9,15 @@ import UIKit
 
 class SearchViewController: UIViewController {
     
+    var searchTimer: Timer?
+    
     private let kRepositoryTableViewCellIdentifier = String(describing: RepositoryTableViewCell.self)
     
-    let searchRepositories: SearchRepoResponse = SearchResponseMock
+    var searchRepositories: SearchRepoResponse = SearchRepoResponse(totalCount: 0, incompleteResults: false, items: [])
     
     // MARK: - UI Elements
+    
+    let searchController = UISearchController()
     
     @IBOutlet weak var tableView: UITableView?
     
@@ -27,13 +31,29 @@ class SearchViewController: UIViewController {
         prepareUI()
     }
     
+    // MARK: - Networking
+    
+    private func getRepositories(searchText: String) {
+        GithubFetcher.fetchRepositories(query: searchText) { [weak self] result in
+            switch result {
+            case .success(let repositories):
+                DispatchQueue.main.async {
+                    self?.searchRepositories = repositories
+                    self?.tableView?.reloadData()
+                }
+            case .failure(let error):
+                print("#[(DEBUG)] Request failed with error \(error)")
+            }
+        }
+    }
+    
+    
     // MARK: - Setup
     
     private func prepareUI() {
-        let searchController = UISearchController()
-        
         searchController.searchBar.barStyle = .black
         searchController.searchBar.isTranslucent = false
+        searchController.searchResultsUpdater = self
         
         navigationItem.title = "Repositories"
         navigationItem.searchController = searchController
@@ -59,15 +79,31 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: kRepositoryTableViewCellIdentifier) as? RepositoryTableViewCell, indexPath.row < self.searchRepositories.items.count else {
             return RepositoryTableViewCell()
         }
+        
+        let repository = searchRepositories.items[indexPath.row]
+        cell.setupCell(with: repository)
+        
         return cell
     }
+}
+
+// MARK: - SearchBar Extension
+
+extension SearchViewController: UISearchResultsUpdating {
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard let repositoryCell = cell as? RepositoryTableViewCell, indexPath.row < self.searchRepositories.items.count else {
+    func updateSearchResults(for searchController: UISearchController) {
+        self.searchTimer?.invalidate()
+        
+        guard let text = searchController.searchBar.text else {
             return
         }
-        let repository = searchRepositories.items[indexPath.row]
         
-        repositoryCell.setupCell(with: repository)
+        searchTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { [weak self] (timer) in
+            DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+                if text.count > 3 {
+                    self?.getRepositories(searchText: text)
+                }
+            }
+        })
     }
 }

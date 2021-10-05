@@ -19,6 +19,7 @@ class RepositoryTableViewCell: UITableViewCell {
     @IBOutlet weak var languageLabel: UILabel?
     @IBOutlet weak var starsLabel: UILabel?
     @IBOutlet weak var avatarImage: UIImageView?
+    @IBOutlet weak var languageIcon: UIImageView?
     
     // MARK: - View Lifecycle
     
@@ -50,5 +51,6 @@ class RepositoryTableViewCell: UITableViewCell {
         languageLabel?.text = repository.language
         starsLabel?.text = repository.stars.kmAbbreviation
         avatarImage?.loadFromUrl(url: repository.owner.avatarUrl)
+        languageIcon?.tintColor = repository.language != nil ? UIColor.randomColor: UIColor.black
     }
 }

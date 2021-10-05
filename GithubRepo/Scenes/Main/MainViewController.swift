@@ -30,7 +30,7 @@ class MainViewController: UITabBarController {
         searchNavController.navigationBar.prefersLargeTitles = true
         searchNavController.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         searchNavController.navigationBar.barTintColor = .black
-        
+        searchNavController.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         
         searchNavController.title = "Search"
         searchNavController.tabBarItem.image = UIImage(systemName: "magnifyingglass")
