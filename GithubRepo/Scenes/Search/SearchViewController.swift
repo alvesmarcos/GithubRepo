@@ -11,6 +11,9 @@ class SearchViewController: UIViewController {
     
     var searchTimer: Timer?
     
+    private let kDebounceTime = 0.5
+    private let kMinStringToSearch = 3
+    
     private let kRepositoryTableViewCellIdentifier = String(describing: RepositoryTableViewCell.self)
     
     var searchRepositories: SearchRepoResponse = SearchRepoResponse(totalCount: 0, incompleteResults: false, items: [])
@@ -98,9 +101,9 @@ extension SearchViewController: UISearchResultsUpdating {
             return
         }
         
-        searchTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { [weak self] (timer) in
+        searchTimer = Timer.scheduledTimer(withTimeInterval: kDebounceTime, repeats: false, block: { [weak self] timer in
             DispatchQueue.global(qos: .userInteractive).async { [weak self] in
-                if text.count > 3 {
+                if text.count > self!.kMinStringToSearch {
                     self?.getRepositories(searchText: text)
                 }
             }

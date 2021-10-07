@@ -39,7 +39,7 @@ struct GithubFetcher {
             do {
                 let repository = try JSONDecoder().decode(SearchRepoResponse.self, from: data)
                 completion(.success(repository))
-            }catch {
+            } catch {
                 completion(.failure(error))
             }
         }.resume()
