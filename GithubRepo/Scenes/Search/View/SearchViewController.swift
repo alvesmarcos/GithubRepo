@@ -25,14 +25,15 @@ class SearchViewController: UIViewController {
 
     // MARK: - UI Elements
     
-    private let searchController: UISearchController = {
+    private lazy var searchController: UISearchController = {
         let searchController = UISearchController()
         searchController.searchBar.barStyle = .black
         searchController.searchBar.isTranslucent = false
+        searchController.searchResultsUpdater = self
         return searchController
     }()
     
-    private let spinner: UIActivityIndicatorView = {
+    private lazy var spinner: UIActivityIndicatorView = {
         let activity = UIActivityIndicatorView()
         activity.color = UIColor.white
         return activity
@@ -58,20 +59,14 @@ class SearchViewController: UIViewController {
     // MARK: - Setup
     
     private func bindViewModel() {
-        self.searchViewModel.repositoryCellViewModels.addAndNotify(observer: self) { [weak self] repoCellViewModel in
-            self?.onViewModelRepoCellViewModelUpdate(repoCellViewModel)
-        }
-        self.searchViewModel.loading.addObserver(self) { [weak self] isLoading in
-            self?.onViewModelLoadingUpdate(isLoading)
-        }
+        self.searchViewModel.delegate = self
     }
     
     private func prepareUI() {
-        searchController.searchResultsUpdater = self
         navigationItem.title = "Repositories"
         navigationItem.searchController = searchController
         
-        onSearchInitialState()
+        handleSearchInitialState()
         
         view.addSubview(spinner)
         spinner.translatesAutoresizingMaskIntoConstraints = false
@@ -87,41 +82,56 @@ class SearchViewController: UIViewController {
         tableView?.register(UINib(nibName: kRepositoryTableViewCellIdentifier, bundle: nil), forCellReuseIdentifier: kRepositoryTableViewCellIdentifier)
     }
     
+    // MARK: - Helper Methods
     
-    private func onSearchInitialState() {
+    private func handleSearchInitialState() {
         self.stateView?.isHidden = false
         self.stateTextView?.text = kInitialSearchStateText
         self.stateImageView?.image = #imageLiteral(resourceName: "Bookmark")
     }
     
-    private func onSearchEmptyState() {
+    private func handleSearchEmptyState() {
         self.stateView?.isHidden = false
         self.stateTextView?.text = kEmptySearchStateText
         self.stateImageView?.image = #imageLiteral(resourceName: "BookmarkMad")
     }
     
-    private func onSearchErrorState() {
+    private func handleSearchErrorState() {
         self.stateView?.isHidden = false
         self.stateTextView?.text = kErrorSearchStateText
         self.stateImageView?.image = #imageLiteral(resourceName: "BookmarkError")
     }
-    
-    // MARK: - ViewModels Updates
-    
-    private func onViewModelRepoCellViewModelUpdate(_ repoCellViewModels: [RepositoryCellViewModel]) {
-        if repoCellViewModels.isEmpty {
-            onSearchEmptyState()
-        } else {
-            self.stateView?.isHidden = true
-            self.tableView?.reloadData()
+}
+
+// MARK: - Notifications from View Model
+
+extension SearchViewController: SearchViewModelDelegate {
+    func onChangeSearchError(error: Bool) {
+        DispatchQueue.main.async {
+            if error {
+                self.handleSearchErrorState()
+            }
         }
     }
     
-    private func onViewModelLoadingUpdate(_ isLoading: Bool) {
-        if isLoading {
-            self.spinner.startAnimating()
-        } else {
-            self.spinner.stopAnimating()
+    func onChangeSearchLoadingState(isLoading: Bool) {
+        DispatchQueue.main.async {
+            if isLoading {
+                self.spinner.startAnimating()
+            } else {
+                self.spinner.stopAnimating()
+            }
+        }
+    }
+    
+    func onChangeSearchRepository(repoCellViewModels: [RepositoryCellViewModel]) {
+        DispatchQueue.main.async {
+            if repoCellViewModels.isEmpty {
+                self.handleSearchEmptyState()
+            } else {
+                self.stateView?.isHidden = true
+                self.tableView?.reloadData()
+            }
         }
     }
 }
@@ -130,15 +140,15 @@ class SearchViewController: UIViewController {
 
 extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchViewModel.repositoryCellViewModels.value.count
+        return searchViewModel.repositoryCellViewModels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: kRepositoryTableViewCellIdentifier) as? RepositoryTableViewCell, indexPath.row < self.searchViewModel.repositoryCellViewModels.value.count else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: kRepositoryTableViewCellIdentifier) as? RepositoryTableViewCell, indexPath.row < self.searchViewModel.repositoryCellViewModels.count else {
             return RepositoryTableViewCell()
         }
         
-        let repositoryViewModel = self.searchViewModel.repositoryCellViewModels.value[indexPath.row]
+        let repositoryViewModel = self.searchViewModel.repositoryCellViewModels[indexPath.row]
         cell.setupCell(with: repositoryViewModel)
         
         return cell
@@ -159,7 +169,7 @@ extension SearchViewController: UISearchResultsUpdating {
         searchTimer = Timer.scheduledTimer(withTimeInterval: kDebounceTime, repeats: false, block: { [weak self] timer in
             DispatchQueue.global(qos: .userInteractive).async { [weak self] in
                 if text.count > self!.kMinStringToSearch {
-                    self?.searchViewModel.fetchRepositories(searchText: text)
+                    self?.searchViewModel.fetchRepositories(query: text)
                 }
             }
         })

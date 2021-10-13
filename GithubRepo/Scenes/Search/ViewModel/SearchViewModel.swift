@@ -7,36 +7,48 @@
 
 import Foundation
 
-class SearchViewModel {
+class SearchViewModel: ViewModelSearching {
     
     // MARK: - Attributes
     
-    var repositoryCellViewModels: Observable<[RepositoryCellViewModel]> = .init([])
-    var loading: Observable<Bool> = .init(false)
-    var error: Observable<String?> = .init(nil)
+    var delegate: SearchViewModelDelegate?
+    private(set) var repositoryCellViewModels: [RepositoryCellViewModel] = .init([])
+    private(set) var loading: Bool = .init(false)
+    private(set) var error: Bool = .init(false)
     
 
-    // MARK: - Methods
+    // MARK: - Private Methods
     
     private func onSearchRepositoryCellUpdate(_ repo: [Repository]) {
-        self.repositoryCellViewModels.value = repo.map { RepositoryCellViewModel(repository: $0) }
+        self.repositoryCellViewModels = repo.map { RepositoryCellViewModel(repository: $0) }
+        self.delegate?.onChangeSearchRepository(repoCellViewModels: self.repositoryCellViewModels)
     }
     
+    private func onSearchLoadingUpdate(_ isLoading: Bool) {
+        self.loading = isLoading
+        self.delegate?.onChangeSearchLoadingState(isLoading: self.loading)
+    }
     
-    func fetchRepositories(searchText: String) {
-        self.loading.value = true
-        
-        GithubFetcher.fetchRepositories(query: searchText) { [weak self] result in
+    private func onSearchErrorUpdate(_ err: Bool) {
+        self.error = err
+        self.delegate?.onChangeSearchError(error: self.error)
+    }
+    
+    // MARK: - Public Methods
+    
+    func fetchRepositories(query: String) {
+        self.onSearchLoadingUpdate(true)
+        GithubFetcher.fetchRepositories(query: query) { [weak self] result in
             switch result {
             case .success(let repositories):
+                self?.onSearchLoadingUpdate(false)
+                self?.onSearchErrorUpdate(false)
                 self?.onSearchRepositoryCellUpdate(repositories.items)
-                self?.error.value = nil
-                self?.loading.value = false
-                
-            case .failure(let error):
-                self?.error.value = error.localizedDescription
-                self?.loading.value = false
+            case .failure:
+                self?.onSearchLoadingUpdate(false)
+                self?.onSearchErrorUpdate(true)
             }
         }
     }
 }
+ 
