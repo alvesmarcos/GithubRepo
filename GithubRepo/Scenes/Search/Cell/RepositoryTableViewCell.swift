@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class RepositoryTableViewCell: UITableViewCell {
     
@@ -38,6 +39,8 @@ class RepositoryTableViewCell: UITableViewCell {
     
     private func prepareUI() {
         avatarImage?.layer.cornerRadius = 25
+        avatarImage?.layer.borderWidth = 1.0
+        avatarImage?.layer.borderColor = UIColor.white.cgColor
     }
     
     // MARK: - Helpers
@@ -50,7 +53,10 @@ class RepositoryTableViewCell: UITableViewCell {
         descriptionLabel?.text = repository.description
         languageLabel?.text = repository.language
         starsLabel?.text = repository.stars.kmAbbreviation
-        avatarImage?.loadFromUrl(url: repository.owner.avatarUrl)
         languageIcon?.tintColor = repository.language != nil ? UIColor.randomColor: UIColor.black
+        
+        if let url = URL(string: repository.owner.avatarUrl) {
+            avatarImage?.kf.setImage(with: url)
+        }
     }
 }
