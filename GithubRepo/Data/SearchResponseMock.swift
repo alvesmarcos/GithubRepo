@@ -7,7 +7,7 @@
 
 import Foundation
 
-let SearchResponseMock = SearchRepoResponse(
+let searchResponseMock = SearchRepoResponse(
     totalCount: 218807, incompleteResults: false, items: [
         Repository(
             id: 44838949,

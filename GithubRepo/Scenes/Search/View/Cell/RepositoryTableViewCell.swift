@@ -10,6 +10,7 @@ import Kingfisher
 
 class RepositoryTableViewCell: UITableViewCell {
     
+    static let kTableViewCellIdentifier = "RepositoryTableViewCell"
     private(set) var repositoryViewModel: RepositoryCellViewModel?
     
     // MARK: - UI Elements
@@ -47,10 +48,7 @@ class RepositoryTableViewCell: UITableViewCell {
     
     func setupCell(with repositoryViewModel: RepositoryCellViewModel) {
         self.repositoryViewModel = repositoryViewModel
-        
-        guard let repository = self.repositoryViewModel?.repository else {
-            return
-        }
+        let repository = repositoryViewModel.repository
         
         ownerLabel?.text = repository.owner.login
         repositoryNameLabel?.text = repository.name

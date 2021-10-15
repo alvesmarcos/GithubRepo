@@ -13,7 +13,6 @@ class SearchViewController: UIViewController {
     
     private let kDebounceTime = 0.5
     private let kMinStringToSearch = 3
-    private let kRepositoryTableViewCellIdentifier = String(describing: RepositoryTableViewCell.self)
     private let kInitialSearchStateText = "Tente buscar por algum repositório"
     private let kEmptySearchStateText = "Nenhum repositorório encontrado"
     private let kErrorSearchStateText = "Desculpe! Ocorreu algum erro"
@@ -21,8 +20,8 @@ class SearchViewController: UIViewController {
     // MARK: - Attributes
     
     private let searchViewModel = SearchViewModel()
-    var searchTimer: Timer?
-
+    private var searchTimer: Timer?
+    
     // MARK: - UI Elements
     
     private lazy var searchController: UISearchController = {
@@ -39,12 +38,10 @@ class SearchViewController: UIViewController {
         return activity
     }()
     
-
-    @IBOutlet weak var tableView: UITableView?
-    @IBOutlet weak var stateView: UIView?
-    @IBOutlet weak var stateImageView: UIImageView?
-    @IBOutlet weak var stateTextView: UILabel?
-    
+    @IBOutlet private weak var tableView: UITableView?
+    @IBOutlet private weak var stateView: UIView?
+    @IBOutlet private weak var stateImageView: UIImageView?
+    @IBOutlet private weak var stateTextView: UILabel?
     
     // MARK: - View Lifecycle
     
@@ -79,7 +76,7 @@ class SearchViewController: UIViewController {
         tableView?.delegate = self
         tableView?.dataSource = self
         
-        tableView?.register(UINib(nibName: kRepositoryTableViewCellIdentifier, bundle: nil), forCellReuseIdentifier: kRepositoryTableViewCellIdentifier)
+        tableView?.register(UINib(nibName: RepositoryTableViewCell.kTableViewCellIdentifier, bundle: nil), forCellReuseIdentifier: RepositoryTableViewCell.kTableViewCellIdentifier)
     }
     
     // MARK: - Helper Methods
@@ -144,13 +141,12 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: kRepositoryTableViewCellIdentifier) as? RepositoryTableViewCell, indexPath.row < self.searchViewModel.repositoryCellViewModels.count else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: RepositoryTableViewCell.kTableViewCellIdentifier)
+                as? RepositoryTableViewCell, indexPath.row < self.searchViewModel.repositoryCellViewModels.count else {
             return RepositoryTableViewCell()
         }
-        
         let repositoryViewModel = self.searchViewModel.repositoryCellViewModels[indexPath.row]
         cell.setupCell(with: repositoryViewModel)
-        
         return cell
     }
 }
@@ -158,7 +154,6 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 // MARK: - SearchBar Extension
 
 extension SearchViewController: UISearchResultsUpdating {
-    
     func updateSearchResults(for searchController: UISearchController) {
         self.searchTimer?.invalidate()
         
