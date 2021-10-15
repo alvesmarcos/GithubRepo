@@ -8,4 +8,5 @@ target 'GithubRepo' do
   # Pods for GithubRepo
   pod 'Alamofire'
   pod 'Kingfisher'
+  pod 'SwiftLint'
 end

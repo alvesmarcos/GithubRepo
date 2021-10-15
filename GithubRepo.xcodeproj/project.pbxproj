@@ -3,12 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D50CEDF27114504007AEC18 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D50CEDE27114504007AEC18 /* SearchViewModel.swift */; };
 		0D5C740B2707FAAC0052FADF /* Int+ConventIntoAFriendlyKMAbbr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5C740A2707FAAC0052FADF /* Int+ConventIntoAFriendlyKMAbbr.swift */; };
 		0D5C741127081DF70052FADF /* UIImageView+LoadFromUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5C741027081DF70052FADF /* UIImageView+LoadFromUrl.swift */; };
+		0D79CA9627154AEB0020A535 /* RepositoryCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D79CA9527154AEB0020A535 /* RepositoryCellViewModel.swift */; };
+		0D98E0372717769900FDD07A /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D98E0362717769900FDD07A /* ViewModel.swift */; };
 		0D9A650C270508FD0061CD8F /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9A650B270508FD0061CD8F /* Repository.swift */; };
 		0D9A650E27050C420061CD8F /* Owner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9A650D27050C420061CD8F /* Owner.swift */; };
 		0D9A651027050F140061CD8F /* SearchRepoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9A650F27050F140061CD8F /* SearchRepoResponse.swift */; };
@@ -42,8 +45,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0D50CEDE27114504007AEC18 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		0D5C740A2707FAAC0052FADF /* Int+ConventIntoAFriendlyKMAbbr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+ConventIntoAFriendlyKMAbbr.swift"; sourceTree = "<group>"; };
 		0D5C741027081DF70052FADF /* UIImageView+LoadFromUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+LoadFromUrl.swift"; sourceTree = "<group>"; };
+		0D79CA9527154AEB0020A535 /* RepositoryCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryCellViewModel.swift; sourceTree = "<group>"; };
+		0D98E0362717769900FDD07A /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		0D9A650B270508FD0061CD8F /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
 		0D9A650D27050C420061CD8F /* Owner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Owner.swift; sourceTree = "<group>"; };
 		0D9A650F27050F140061CD8F /* SearchRepoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRepoResponse.swift; sourceTree = "<group>"; };
@@ -92,6 +98,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0D50CEDC27113927007AEC18 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0D9A6513270528B80061CD8F /* Cell */,
+				0DAFDE3026E71433009FF757 /* SearchViewController.swift */,
+				0DAFDE3126E71433009FF757 /* SearchViewController.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0D50CEDD27113939007AEC18 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				0D50CEDE27114504007AEC18 /* SearchViewModel.swift */,
+				0D79CA9527154AEB0020A535 /* RepositoryCellViewModel.swift */,
+				0D98E0362717769900FDD07A /* ViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		0D5C74082707DB1E0052FADF /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -221,9 +247,8 @@
 		0DAFDE2526E7047E009FF757 /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				0D9A6513270528B80061CD8F /* Cell */,
-				0DAFDE3026E71433009FF757 /* SearchViewController.swift */,
-				0DAFDE3126E71433009FF757 /* SearchViewController.xib */,
+				0D50CEDC27113927007AEC18 /* View */,
+				0D50CEDD27113939007AEC18 /* ViewModel */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -267,7 +292,6 @@
 				4A86A2EDBEBDAD9CDFE2766D /* Pods-GithubRepo.debug.xcconfig */,
 				104D562BD64BAE1DB7E8722A /* Pods-GithubRepo.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -283,6 +307,7 @@
 				0DAFDE0626E6EFC3009FF757 /* Frameworks */,
 				0DAFDE0726E6EFC3009FF757 /* Resources */,
 				A22A40674B912ADE5EDFB1B6 /* [CP] Embed Pods Frameworks */,
+				0DB25D68271A1A6F00B2968C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -353,6 +378,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0DB25D68271A1A6F00B2968C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which \"${PODS_ROOT}/SwiftLint/swiftlint\" >/dev/null; then\n    ${PODS_ROOT}/SwiftLint/swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
 		A22A40674B912ADE5EDFB1B6 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -405,10 +447,13 @@
 				0D9A650E27050C420061CD8F /* Owner.swift in Sources */,
 				0D9A6516270529090061CD8F /* RepositoryTableViewCell.swift in Sources */,
 				0DAFDE0D26E6EFC3009FF757 /* AppDelegate.swift in Sources */,
+				0D50CEDF27114504007AEC18 /* SearchViewModel.swift in Sources */,
 				0DC0572E2709089200EE6F5C /* GithubFetcher.swift in Sources */,
 				0DAFDE2C26E713EC009FF757 /* AboutViewController.swift in Sources */,
+				0D98E0372717769900FDD07A /* ViewModel.swift in Sources */,
 				0DAFDE0F26E6EFC3009FF757 /* SceneDelegate.swift in Sources */,
 				0D9A651027050F140061CD8F /* SearchRepoResponse.swift in Sources */,
+				0D79CA9627154AEB0020A535 /* RepositoryCellViewModel.swift in Sources */,
 				0D9A6512270522440061CD8F /* SearchResponseMock.swift in Sources */,
 				0DC0572B2708F95A00EE6F5C /* UIColors+RandomColor.swift in Sources */,
 				0D5C741127081DF70052FADF /* UIImageView+LoadFromUrl.swift in Sources */,
