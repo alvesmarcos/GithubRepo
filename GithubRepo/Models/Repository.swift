@@ -15,9 +15,4 @@ struct Repository: Codable {
     let forks: Int
     let stars: Int
     let owner: Owner
-    
-    private enum CodingKeys: String, CodingKey {
-        case stars = "watchers"
-        case id, name, description, language, forks, owner
-    }
 }

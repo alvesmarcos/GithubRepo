@@ -8,47 +8,46 @@
 import Foundation
 
 class SearchViewModel: ViewModelSearching {
-    
     // MARK: - Attributes
-    
-    var delegate: SearchViewModelDelegate?
-    private(set) var repositoryCellViewModels: [RepositoryCellViewModel] = .init([])
-    private(set) var loading: Bool = .init(false)
-    private(set) var error: Bool = .init(false)
-    
 
-    // MARK: - Private Methods
-    
-    private func onSearchRepositoryCellUpdate(_ repo: [Repository]) {
-        self.repositoryCellViewModels = repo.map { RepositoryCellViewModel(repository: $0) }
-        self.delegate?.onChangeSearchRepository(repoCellViewModels: self.repositoryCellViewModels)
+    private var githubRepository: GithubRepository
+    private(set) var repositoryCellViewModels: [RepositoryCellViewModel]
+    private(set) var loading: Bool
+    private(set) var error: Bool
+    weak var delegate: SearchViewModelDelegate?
+
+    // MARK: - Constructors
+
+    init(repository: GithubRepository = GithubMainRepository()) {
+        self.repositoryCellViewModels = []
+        self.loading = false
+        self.error = false
+        self.githubRepository = repository
+        self.githubRepository.delegate = self
     }
-    
-    private func onSearchLoadingUpdate(_ isLoading: Bool) {
-        self.loading = isLoading
-        self.delegate?.onChangeSearchLoadingState(isLoading: self.loading)
-    }
-    
-    private func onSearchErrorUpdate(_ err: Bool) {
-        self.error = err
-        self.delegate?.onChangeSearchError(error: self.error)
-    }
-    
-    // MARK: - Public Methods
-    
+
+    // MARK: - Methods
+
     func fetchRepositories(query: String) {
-        self.onSearchLoadingUpdate(true)
-        GithubFetcher.fetchRepositories(query: query) { [weak self] result in
-            switch result {
-            case .success(let repositories):
-                self?.onSearchLoadingUpdate(false)
-                self?.onSearchErrorUpdate(false)
-                self?.onSearchRepositoryCellUpdate(repositories.items)
-            case .failure:
-                self?.onSearchLoadingUpdate(false)
-                self?.onSearchErrorUpdate(true)
-            }
-        }
+        githubRepository.fetchRepositories(with: query)
     }
 }
- 
+
+// MARK: - Notifications from Repository
+
+extension SearchViewModel: GithubRepositoryDelegate {
+    func didChangeLoading(loading: Bool) {
+        self.loading = loading
+        self.delegate?.onChangeSearchLoadingState(isLoading: loading)
+    }
+
+    func didChangeRepositories(repositories: [Repository]) {
+        self.repositoryCellViewModels = repositories.map { RepositoryCellViewModel(repository: $0) }
+        self.delegate?.onChangeSearchRepository(repoCellViewModels: self.repositoryCellViewModels)
+    }
+
+    func didChangeError(error: Bool) {
+        self.error = error
+        self.delegate?.onChangeSearchError(error: error)
+    }
+}

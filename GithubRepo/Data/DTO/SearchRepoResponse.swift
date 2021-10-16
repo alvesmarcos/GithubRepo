@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct SearchRepoResponse: Codable {
+struct SearchRepoResponse: Decodable {
     let totalCount: Int64
     let incompleteResults: Bool
-    let items: [Repository]
-    
+    let items: [RepositoryResponse]
+
     private enum CodingKeys: String, CodingKey {
         case totalCount = "total_count"
         case incompleteResults = "incomplete_results"

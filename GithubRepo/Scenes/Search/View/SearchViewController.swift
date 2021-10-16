@@ -8,22 +8,21 @@
 import UIKit
 
 class SearchViewController: UIViewController {
-    
     // MARK: - Constants
-    
+
     private let kDebounceTime = 0.5
     private let kMinStringToSearch = 3
     private let kInitialSearchStateText = "Tente buscar por algum repositório"
     private let kEmptySearchStateText = "Nenhum repositorório encontrado"
     private let kErrorSearchStateText = "Desculpe! Ocorreu algum erro"
-    
+
     // MARK: - Attributes
-    
+
     private let searchViewModel = SearchViewModel()
     private var searchTimer: Timer?
-    
+
     // MARK: - UI Elements
-    
+
     private lazy var searchController: UISearchController = {
         let searchController = UISearchController()
         searchController.searchBar.barStyle = .black
@@ -31,72 +30,74 @@ class SearchViewController: UIViewController {
         searchController.searchResultsUpdater = self
         return searchController
     }()
-    
+
     private lazy var spinner: UIActivityIndicatorView = {
         let activity = UIActivityIndicatorView()
         activity.color = UIColor.white
         return activity
     }()
-    
+
     @IBOutlet private weak var tableView: UITableView?
     @IBOutlet private weak var stateView: UIView?
     @IBOutlet private weak var stateImageView: UIImageView?
     @IBOutlet private weak var stateTextView: UILabel?
-    
+
     // MARK: - View Lifecycle
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         registerTableViewCell()
         bindViewModel()
         prepareUI()
     }
-    
+
     // MARK: - Setup
-    
+
     private func bindViewModel() {
         self.searchViewModel.delegate = self
     }
-    
+
     private func prepareUI() {
         navigationItem.title = "Repositories"
         navigationItem.searchController = searchController
-        
         handleSearchInitialState()
-        
         view.addSubview(spinner)
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         spinner.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
     }
-    
-    
+
     private func registerTableViewCell() {
         tableView?.delegate = self
         tableView?.dataSource = self
-        
-        tableView?.register(UINib(nibName: RepositoryTableViewCell.kTableViewCellIdentifier, bundle: nil), forCellReuseIdentifier: RepositoryTableViewCell.kTableViewCellIdentifier)
+        tableView?.register(
+            UINib(
+                nibName: RepositoryTableViewCell.kTableViewCellIdentifier,
+                bundle: nil
+            ),
+            forCellReuseIdentifier: RepositoryTableViewCell.kTableViewCellIdentifier
+        )
     }
-    
+
     // MARK: - Helper Methods
-    
+
     private func handleSearchInitialState() {
         self.stateView?.isHidden = false
         self.stateTextView?.text = kInitialSearchStateText
-        self.stateImageView?.image = #imageLiteral(resourceName: "Bookmark")
+        self.stateImageView?.image = UIImage(named: "Bookmark")
     }
-    
+
     private func handleSearchEmptyState() {
         self.stateView?.isHidden = false
         self.stateTextView?.text = kEmptySearchStateText
-        self.stateImageView?.image = #imageLiteral(resourceName: "BookmarkMad")
+        self.stateImageView?.image = UIImage(named: "BookmarkMad")
     }
-    
+
     private func handleSearchErrorState() {
         self.stateView?.isHidden = false
         self.stateTextView?.text = kErrorSearchStateText
-        self.stateImageView?.image = #imageLiteral(resourceName: "BookmarkError")
+        self.stateImageView?.image = UIImage(named: "BookmarkError")
     }
 }
 
@@ -110,7 +111,7 @@ extension SearchViewController: SearchViewModelDelegate {
             }
         }
     }
-    
+
     func onChangeSearchLoadingState(isLoading: Bool) {
         DispatchQueue.main.async {
             if isLoading {
@@ -120,7 +121,7 @@ extension SearchViewController: SearchViewModelDelegate {
             }
         }
     }
-    
+
     func onChangeSearchRepository(repoCellViewModels: [RepositoryCellViewModel]) {
         DispatchQueue.main.async {
             if repoCellViewModels.isEmpty {
@@ -139,7 +140,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchViewModel.repositoryCellViewModels.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: RepositoryTableViewCell.kTableViewCellIdentifier)
                 as? RepositoryTableViewCell, indexPath.row < self.searchViewModel.repositoryCellViewModels.count else {
@@ -156,17 +157,20 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 extension SearchViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         self.searchTimer?.invalidate()
-        
+
         guard let text = searchController.searchBar.text else {
             return
         }
-        
-        searchTimer = Timer.scheduledTimer(withTimeInterval: kDebounceTime, repeats: false, block: { [weak self] timer in
-            DispatchQueue.global(qos: .userInteractive).async { [weak self] in
-                if text.count > self!.kMinStringToSearch {
-                    self?.searchViewModel.fetchRepositories(query: text)
+        searchTimer = Timer.scheduledTimer(
+            withTimeInterval: kDebounceTime,
+            repeats: false,
+            block: { [weak self] _ in
+                DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+                    if text.count > self?.kMinStringToSearch ?? 0 {
+                        self?.searchViewModel.fetchRepositories(query: text)
+                    }
                 }
             }
-        })
+        )
     }
 }
