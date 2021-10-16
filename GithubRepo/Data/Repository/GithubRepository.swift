@@ -8,9 +8,9 @@
 import Foundation
 
 protocol GithubRepositoryDelegate: AnyObject {
-    func didChangeLoading()
-    func didChangeRepositories()
-    func didChangeError()
+    func didChangeLoading(loading: Bool)
+    func didChangeRepositories(repositories: [Repository])
+    func didChangeError(error: Bool)
 }
 
 protocol GithubRepository {
@@ -18,6 +18,6 @@ protocol GithubRepository {
     var repositories: [Repository] { get }
     var loading: Bool { get }
     var error: Bool { get }
-    
+
     func fetchRepositories(with query: String)
 }

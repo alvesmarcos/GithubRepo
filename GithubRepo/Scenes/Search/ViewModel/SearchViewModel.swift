@@ -8,17 +8,16 @@
 import Foundation
 
 class SearchViewModel: ViewModelSearching {
-    
     // MARK: - Attributes
-    
-    weak var delegate: SearchViewModelDelegate?
+
     private var githubRepository: GithubRepository
     private(set) var repositoryCellViewModels: [RepositoryCellViewModel]
     private(set) var loading: Bool
     private(set) var error: Bool
-    
+    weak var delegate: SearchViewModelDelegate?
+
     // MARK: - Constructors
-    
+
     init(repository: GithubRepository = GithubMainRepository()) {
         self.repositoryCellViewModels = []
         self.loading = false
@@ -26,9 +25,9 @@ class SearchViewModel: ViewModelSearching {
         self.githubRepository = repository
         self.githubRepository.delegate = self
     }
-    
+
     // MARK: - Methods
-    
+
     func fetchRepositories(query: String) {
         githubRepository.fetchRepositories(with: query)
     }
@@ -37,18 +36,18 @@ class SearchViewModel: ViewModelSearching {
 // MARK: - Notifications from Repository
 
 extension SearchViewModel: GithubRepositoryDelegate {
-    func didChangeLoading() {
-        self.loading = self.githubRepository.loading
-        self.delegate?.onChangeSearchLoadingState(isLoading: self.loading)
+    func didChangeLoading(loading: Bool) {
+        self.loading = loading
+        self.delegate?.onChangeSearchLoadingState(isLoading: loading)
     }
-    
-    func didChangeRepositories() {
-        self.repositoryCellViewModels = githubRepository.repositories.map { RepositoryCellViewModel(repository: $0) }
+
+    func didChangeRepositories(repositories: [Repository]) {
+        self.repositoryCellViewModels = repositories.map { RepositoryCellViewModel(repository: $0) }
         self.delegate?.onChangeSearchRepository(repoCellViewModels: self.repositoryCellViewModels)
     }
-    
-    func didChangeError() {
-        self.error = githubRepository.error
-        self.delegate?.onChangeSearchError(error: self.error)
+
+    func didChangeError(error: Bool) {
+        self.error = error
+        self.delegate?.onChangeSearchError(error: error)
     }
 }

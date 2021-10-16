@@ -7,18 +7,19 @@
 
 import Foundation
 
-class LocalGithubDataSource: GithubDataSource {
+class MockGithubDataSource: GithubDataSource {
     let service: GithubFetcher
-    
-    init(service: GithubFetcher = LocalGithubFetcher()) {
+
+    init(service: GithubFetcher = MockGithubFetcher()) {
         self.service = service
     }
-    
-    func getRepositories(with query: String, completion: @escaping (Result<[RepositoryResponse], Error>) -> Void) {
+
+    func getRepositories(with query: String, completion: @escaping (Result<[Repository], Error>) -> Void) {
         service.fetchRepositories(with: query) { response in
             switch response {
             case .success(let searchRepositoriesResponse):
-                completion(.success(searchRepositoriesResponse.items))
+                let repositories = searchRepositoriesResponse.items.map { RepositoryResponseMapper.map($0) }
+                completion(.success(repositories))
             case .failure(let error):
                 completion(.failure(error))
             }

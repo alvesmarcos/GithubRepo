@@ -14,7 +14,7 @@ protocol SearchViewModelDelegate: AnyObject {
 }
 
 protocol ViewModelSearching {
-    func fetchRepositories(query: String)
-    
     var delegate: SearchViewModelDelegate? { get set }
+
+    func fetchRepositories(query: String)
 }

@@ -10,6 +10,6 @@ import Foundation
 protocol DataMapper {
     associatedtype DataModel
     associatedtype DomainModel
-    
+
     static func map(_ data: DataModel) -> DomainModel
 }

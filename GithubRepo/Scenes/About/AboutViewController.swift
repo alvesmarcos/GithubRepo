@@ -8,17 +8,15 @@
 import UIKit
 
 class AboutViewController: UIViewController {
-    
     // MARK: - View Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         prepareUI()
     }
-    
+
     // MARK: - Setup
-    
+
     func prepareUI() {
         navigationItem.title = "About"
     }

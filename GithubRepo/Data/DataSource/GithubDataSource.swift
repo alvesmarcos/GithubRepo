@@ -8,5 +8,5 @@
 import Foundation
 
 protocol GithubDataSource {
-    func getRepositories(with query: String, completion: @escaping (Result<[RepositoryResponse], Error>) -> Void)
+    func getRepositories(with query: String, completion: @escaping (Result<[Repository], Error>) -> Void)
 }

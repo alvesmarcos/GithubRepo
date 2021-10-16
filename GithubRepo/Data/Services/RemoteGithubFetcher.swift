@@ -5,8 +5,8 @@
 //  Created by Marcos Alves on 15/10/21.
 //
 
-import Foundation
 import Alamofire
+import Foundation
 
 struct GithubFetcherConstants {
     static let kUrl = "https://api.github.com/search/repositories"
@@ -18,14 +18,14 @@ struct RemoteGithubFetcher: GithubFetcher {
             completion(.failure(URLError(.badURL)))
             return
         }
-        AF.request(url, method: .get, parameters: ["q": query]).responseDecodable(of: SearchRepoResponse.self) { response in
-            
-            switch response.result {
-            case .success(let data):
-                completion(.success(data))
-            case .failure(let error):
-                completion(.failure(error))
+        AF.request(url, method: .get, parameters: ["q": query])
+            .responseDecodable(of: SearchRepoResponse.self) { response in
+                switch response.result {
+                case .success(let data):
+                    completion(.success(data))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
             }
-        }
     }
 }

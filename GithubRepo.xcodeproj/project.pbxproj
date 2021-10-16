@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0D50CEDF27114504007AEC18 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D50CEDE27114504007AEC18 /* SearchViewModel.swift */; };
 		0D5C740B2707FAAC0052FADF /* Int+ConventIntoAFriendlyKMAbbr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5C740A2707FAAC0052FADF /* Int+ConventIntoAFriendlyKMAbbr.swift */; };
-		0D5C741127081DF70052FADF /* UIImageView+LoadFromUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5C741027081DF70052FADF /* UIImageView+LoadFromUrl.swift */; };
 		0D79CA9627154AEB0020A535 /* RepositoryCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D79CA9527154AEB0020A535 /* RepositoryCellViewModel.swift */; };
 		0D98E0372717769900FDD07A /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D98E0362717769900FDD07A /* ViewModel.swift */; };
 		0D9A650C270508FD0061CD8F /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9A650B270508FD0061CD8F /* Repository.swift */; };
@@ -40,7 +39,7 @@
 		0DAFDE3326E71433009FF757 /* SearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DAFDE3126E71433009FF757 /* SearchViewController.xib */; };
 		0DB25D6C271A420C00B2968C /* GithubFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB25D6B271A420C00B2968C /* GithubFetcher.swift */; };
 		0DB25D6E271A43E500B2968C /* RemoteGithubFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB25D6D271A43E500B2968C /* RemoteGithubFetcher.swift */; };
-		0DB25D70271A47D300B2968C /* LocalGithubFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB25D6F271A47D300B2968C /* LocalGithubFetcher.swift */; };
+		0DB25D70271A47D300B2968C /* MockGithubFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB25D6F271A47D300B2968C /* MockGithubFetcher.swift */; };
 		0DB25D73271A4DF500B2968C /* DataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB25D72271A4DF500B2968C /* DataMapper.swift */; };
 		0DB25D75271A517700B2968C /* RepositoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB25D74271A517700B2968C /* RepositoryResponse.swift */; };
 		0DB25D77271A519600B2968C /* OwnerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB25D76271A519600B2968C /* OwnerResponse.swift */; };
@@ -56,7 +55,6 @@
 /* Begin PBXFileReference section */
 		0D50CEDE27114504007AEC18 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		0D5C740A2707FAAC0052FADF /* Int+ConventIntoAFriendlyKMAbbr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+ConventIntoAFriendlyKMAbbr.swift"; sourceTree = "<group>"; };
-		0D5C741027081DF70052FADF /* UIImageView+LoadFromUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+LoadFromUrl.swift"; sourceTree = "<group>"; };
 		0D79CA9527154AEB0020A535 /* RepositoryCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryCellViewModel.swift; sourceTree = "<group>"; };
 		0D98E0362717769900FDD07A /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		0D9A650B270508FD0061CD8F /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
@@ -89,7 +87,7 @@
 		0DAFDE3126E71433009FF757 /* SearchViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchViewController.xib; sourceTree = "<group>"; };
 		0DB25D6B271A420C00B2968C /* GithubFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubFetcher.swift; sourceTree = "<group>"; };
 		0DB25D6D271A43E500B2968C /* RemoteGithubFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGithubFetcher.swift; sourceTree = "<group>"; };
-		0DB25D6F271A47D300B2968C /* LocalGithubFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalGithubFetcher.swift; sourceTree = "<group>"; };
+		0DB25D6F271A47D300B2968C /* MockGithubFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockGithubFetcher.swift; sourceTree = "<group>"; };
 		0DB25D72271A4DF500B2968C /* DataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMapper.swift; sourceTree = "<group>"; };
 		0DB25D74271A517700B2968C /* RepositoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryResponse.swift; sourceTree = "<group>"; };
 		0DB25D76271A519600B2968C /* OwnerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwnerResponse.swift; sourceTree = "<group>"; };
@@ -140,7 +138,6 @@
 			isa = PBXGroup;
 			children = (
 				0D5C740A2707FAAC0052FADF /* Int+ConventIntoAFriendlyKMAbbr.swift */,
-				0D5C741027081DF70052FADF /* UIImageView+LoadFromUrl.swift */,
 				0DC0572A2708F95A00EE6F5C /* UIColors+RandomColor.swift */,
 			);
 			path = Extensions;
@@ -294,7 +291,7 @@
 			children = (
 				0DB25D6B271A420C00B2968C /* GithubFetcher.swift */,
 				0DB25D6D271A43E500B2968C /* RemoteGithubFetcher.swift */,
-				0DB25D6F271A47D300B2968C /* LocalGithubFetcher.swift */,
+				0DB25D6F271A47D300B2968C /* MockGithubFetcher.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -493,7 +490,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0DB25D73271A4DF500B2968C /* DataMapper.swift in Sources */,
-				0DB25D70271A47D300B2968C /* LocalGithubFetcher.swift in Sources */,
+				0DB25D70271A47D300B2968C /* MockGithubFetcher.swift in Sources */,
 				0DAFDE3226E71433009FF757 /* SearchViewController.swift in Sources */,
 				0D5C740B2707FAAC0052FADF /* Int+ConventIntoAFriendlyKMAbbr.swift in Sources */,
 				0DAFDE2926E70D61009FF757 /* MainViewController.swift in Sources */,
@@ -513,7 +510,6 @@
 				0DB25D81271A5F5500B2968C /* GithubRepository.swift in Sources */,
 				0D79CA9627154AEB0020A535 /* RepositoryCellViewModel.swift in Sources */,
 				0DC0572B2708F95A00EE6F5C /* UIColors+RandomColor.swift in Sources */,
-				0D5C741127081DF70052FADF /* UIImageView+LoadFromUrl.swift in Sources */,
 				0DB25D6C271A420C00B2968C /* GithubFetcher.swift in Sources */,
 				0D9A650C270508FD0061CD8F /* Repository.swift in Sources */,
 				0DB25D7C271A5A8F00B2968C /* RemoteGithubDataSource.swift in Sources */,
