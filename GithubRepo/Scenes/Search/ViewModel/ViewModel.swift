@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol SearchViewModelDelegate {
+protocol SearchViewModelDelegate: AnyObject {
     func onChangeSearchLoadingState(isLoading: Bool)
     func onChangeSearchRepository(repoCellViewModels: [RepositoryCellViewModel])
     func onChangeSearchError(error: Bool)
@@ -15,5 +15,6 @@ protocol SearchViewModelDelegate {
 
 protocol ViewModelSearching {
     func fetchRepositories(query: String)
+    
     var delegate: SearchViewModelDelegate? { get set }
 }

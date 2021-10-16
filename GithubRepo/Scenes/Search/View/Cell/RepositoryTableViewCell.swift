@@ -15,13 +15,13 @@ class RepositoryTableViewCell: UITableViewCell {
     
     // MARK: - UI Elements
     
-    @IBOutlet weak var ownerLabel: UILabel?
-    @IBOutlet weak var repositoryNameLabel: UILabel?
-    @IBOutlet weak var descriptionLabel: UILabel?
-    @IBOutlet weak var languageLabel: UILabel?
-    @IBOutlet weak var starsLabel: UILabel?
-    @IBOutlet weak var avatarImage: UIImageView?
-    @IBOutlet weak var languageIcon: UIImageView?
+    @IBOutlet private weak var ownerLabel: UILabel?
+    @IBOutlet private weak var repositoryNameLabel: UILabel?
+    @IBOutlet private weak var descriptionLabel: UILabel?
+    @IBOutlet private weak var languageLabel: UILabel?
+    @IBOutlet private weak var starsLabel: UILabel?
+    @IBOutlet private weak var avatarImage: UIImageView?
+    @IBOutlet private weak var languageIcon: UIImageView?
     
     // MARK: - View Lifecycle
     
@@ -50,14 +50,14 @@ class RepositoryTableViewCell: UITableViewCell {
         self.repositoryViewModel = repositoryViewModel
         let repository = repositoryViewModel.repository
         
-        ownerLabel?.text = repository.owner.login
+        ownerLabel?.text = repository.owner.name
         repositoryNameLabel?.text = repository.name
         descriptionLabel?.text = repository.description
         languageLabel?.text = repository.language
         starsLabel?.text = repository.stars.kmAbbreviation
         languageIcon?.tintColor = repository.language != nil ? UIColor.randomColor: UIColor.black
         
-        if let url = URL(string: repository.owner.avatarUrl) {
+        if let url = repository.owner.avatar {
             avatarImage?.kf.setImage(with: url)
         }
     }
