@@ -18,7 +18,7 @@ class SearchViewController: UIViewController {
 
     // MARK: - Attributes
 
-    private let searchViewModel = SearchViewModel()
+    private var searchViewModel: SearchViewModel?
     private var searchTimer: Timer?
 
     // MARK: - UI Elements
@@ -48,15 +48,17 @@ class SearchViewController: UIViewController {
         super.viewDidLoad()
 
         registerTableViewCell()
-        bindViewModel()
         prepareUI()
     }
 
-    // MARK: - Setup
+    // MARK: - View Model
 
-    private func bindViewModel() {
-        self.searchViewModel.delegate = self
+    func bindViewModel(to viewModel: SearchViewModel) {
+        self.searchViewModel = viewModel
+        self.searchViewModel?.delegate = self
     }
+
+    // MARK: - Setup
 
     private func prepareUI() {
         navigationItem.title = "Repositories"
@@ -138,16 +140,18 @@ extension SearchViewController: SearchViewModelDelegate {
 
 extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchViewModel.repositoryCellViewModels.count
+        return searchViewModel?.repositoryCellViewModels.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: RepositoryTableViewCell.kTableViewCellIdentifier)
-                as? RepositoryTableViewCell, indexPath.row < self.searchViewModel.repositoryCellViewModels.count else {
+        guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: RepositoryTableViewCell.kTableViewCellIdentifier
+        ) as? RepositoryTableViewCell, indexPath.row < self.searchViewModel?.repositoryCellViewModels.count ?? 0 else {
             return RepositoryTableViewCell()
         }
-        let repositoryViewModel = self.searchViewModel.repositoryCellViewModels[indexPath.row]
-        cell.setupCell(with: repositoryViewModel)
+        if let repositoryViewModel = self.searchViewModel?.repositoryCellViewModels[indexPath.row] {
+            cell.setupCell(with: repositoryViewModel)
+        }
         return cell
     }
 }
@@ -167,7 +171,7 @@ extension SearchViewController: UISearchResultsUpdating {
             block: { [weak self] _ in
                 DispatchQueue.global(qos: .userInteractive).async { [weak self] in
                     if text.count > self?.kMinStringToSearch ?? 0 {
-                        self?.searchViewModel.fetchRepositories(query: text)
+                        self?.searchViewModel?.fetchRepositories(query: text)
                     }
                 }
             }
