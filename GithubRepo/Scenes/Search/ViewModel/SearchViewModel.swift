@@ -14,11 +14,13 @@ class SearchViewModel: ViewModelSearching {
     private(set) var repositoryCellViewModels: [RepositoryCellViewModel]
     private(set) var loading: Bool
     private(set) var error: Bool
+    private weak var coordinator: SearchCoordinator?
     weak var delegate: SearchViewModelDelegate?
 
     // MARK: - Constructors
 
-    init(repository: GithubRepository = GithubMainRepository()) {
+    init(coordinator: SearchCoordinator, repository: GithubRepository = GithubMainRepository()) {
+        self.coordinator = coordinator
         self.repositoryCellViewModels = []
         self.loading = false
         self.error = false
