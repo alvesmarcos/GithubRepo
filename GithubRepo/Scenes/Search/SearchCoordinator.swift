@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 class SearchCoordinator: NavigationCoordinator {
+    var isCompleted: (() -> Void)?
+    
     var rootViewController: UINavigationController
 
     var childCoordinators = [Coordinator]()
@@ -21,11 +23,11 @@ class SearchCoordinator: NavigationCoordinator {
         let searchViewController = SearchViewController()
         let searchViewModel = SearchViewModel(coordinator: self)
         searchViewController.bindViewModel(to: searchViewModel)
-        setup()
+        setupRootViewController()
         self.rootViewController.setViewControllers([searchViewController], animated: true)
     }
 
-    private func setup() {
+    private func setupRootViewController() {
         rootViewController.navigationBar.prefersLargeTitles = true
         rootViewController.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         rootViewController.navigationBar.barTintColor = .black

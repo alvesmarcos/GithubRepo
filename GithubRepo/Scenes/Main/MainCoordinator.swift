@@ -11,6 +11,7 @@ import UIKit
 class MainCoordinator: TabCoordinator {
     // MARK: - Properties
 
+    var isCompleted: (() -> Void)?
     var childCoordinators = [Coordinator]()
     var rootViewController: UITabBarController
 
@@ -25,6 +26,9 @@ class MainCoordinator: TabCoordinator {
     func start() {
         let aboutCoordinator = AboutCoordinator(rootViewController: UINavigationController())
         let searchCoordinator = SearchCoordinator(rootViewController: UINavigationController())
+
+        self.store(coordinator: aboutCoordinator)
+        self.store(coordinator: searchCoordinator)
 
         aboutCoordinator.start()
         searchCoordinator.start()

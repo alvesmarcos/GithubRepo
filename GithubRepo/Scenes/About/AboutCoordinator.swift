@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 class AboutCoordinator: NavigationCoordinator {
+    var isCompleted: (() -> Void)?
+    
     var rootViewController: UINavigationController
 
     var childCoordinators = [Coordinator]()
@@ -19,11 +21,11 @@ class AboutCoordinator: NavigationCoordinator {
 
     func start() {
         let aboutViewController = AboutViewController()
-        setup()
+        setupRootViewController()
         self.rootViewController.setViewControllers([aboutViewController], animated: true)
     }
 
-    private func setup() {
+    private func setupRootViewController() {
         rootViewController.navigationBar.prefersLargeTitles = true
         rootViewController.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         rootViewController.tabBarItem.title = "About"
