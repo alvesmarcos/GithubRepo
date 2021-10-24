@@ -6,26 +6,27 @@
 //
 
 import Foundation
+import RxRelay
+import RxSwift
 
 class SearchViewModel: ViewModelSearching {
     // MARK: - Attributes
 
+    private let disposeBag = DisposeBag()
     private var githubRepository: GithubRepository
-    private(set) var repositoryCellViewModels: [RepositoryCellViewModel]
-    private(set) var loading: Bool
-    private(set) var error: Bool
+    private(set) var repositoryCellViewModels: BehaviorRelay<[RepositoryCellViewModel]>
+    private(set) var state: BehaviorRelay<FetchState>
     private weak var coordinator: SearchCoordinator?
-    weak var delegate: SearchViewModelDelegate?
 
     // MARK: - Constructors
 
     init(coordinator: SearchCoordinator, repository: GithubRepository = GithubMainRepository()) {
         self.coordinator = coordinator
-        self.repositoryCellViewModels = []
-        self.loading = false
-        self.error = false
+        self.repositoryCellViewModels = BehaviorRelay(value: [])
+        self.state = BehaviorRelay(value: .inital)
         self.githubRepository = repository
-        self.githubRepository.delegate = self
+
+        self.bind()
     }
 
     // MARK: - Methods
@@ -33,23 +34,28 @@ class SearchViewModel: ViewModelSearching {
     func fetchRepositories(query: String) {
         githubRepository.fetchRepositories(with: query)
     }
+
+    private func bind() {
+        githubRepository.state.subscribe(onNext: {
+            self.onChangeState(state: $0)
+        })
+        .disposed(by: disposeBag)
+        githubRepository.repositories.subscribe(onNext: {
+            self.onChangeRepositories(repos: $0)
+        })
+        .disposed(by: disposeBag)
+    }
 }
 
-// MARK: - Notifications from Repository
+// MARK: - Handle Notifications from Repository
 
-extension SearchViewModel: GithubRepositoryDelegate {
-    func didChangeLoading(loading: Bool) {
-        self.loading = loading
-        self.delegate?.onChangeSearchLoadingState(isLoading: loading)
+extension SearchViewModel {
+    private func onChangeState(state: FetchState) {
+        self.state.accept(state)
     }
 
-    func didChangeRepositories(repositories: [Repository]) {
-        self.repositoryCellViewModels = repositories.map { RepositoryCellViewModel(repository: $0) }
-        self.delegate?.onChangeSearchRepository(repoCellViewModels: self.repositoryCellViewModels)
-    }
-
-    func didChangeError(error: Bool) {
-        self.error = error
-        self.delegate?.onChangeSearchError(error: error)
+    private func onChangeRepositories(repos: [Repository]) {
+        let repositoriesCell = repos.map { RepositoryCellViewModel(repository: $0) }
+        self.repositoryCellViewModels.accept(repositoriesCell)
     }
 }
