@@ -26,7 +26,7 @@ class SearchViewModel: ViewModelSearching {
         self.state = BehaviorRelay(value: .inital)
         self.githubRepository = repository
 
-        self.bind()
+        self.bindRepository()
     }
 
     // MARK: - Methods
@@ -35,27 +35,15 @@ class SearchViewModel: ViewModelSearching {
         githubRepository.fetchRepositories(with: query)
     }
 
-    private func bind() {
-        githubRepository.state.subscribe(onNext: {
-            self.onChangeState(state: $0)
-        })
-        .disposed(by: disposeBag)
-        githubRepository.repositories.subscribe(onNext: {
-            self.onChangeRepositories(repos: $0)
-        })
-        .disposed(by: disposeBag)
-    }
-}
-
-// MARK: - Handle Notifications from Repository
-
-extension SearchViewModel {
-    private func onChangeState(state: FetchState) {
-        self.state.accept(state)
-    }
-
-    private func onChangeRepositories(repos: [Repository]) {
-        let repositoriesCell = repos.map { RepositoryCellViewModel(repository: $0) }
-        self.repositoryCellViewModels.accept(repositoriesCell)
+    private func bindRepository() {
+        githubRepository.state
+            .bind(to: self.state)
+            .disposed(by: disposeBag)
+        githubRepository.repositories
+            .map({ repos in
+               repos.map { RepositoryCellViewModel(repository: $0) }
+            })
+            .bind(to: self.repositoryCellViewModels)
+            .disposed(by: disposeBag)
     }
 }

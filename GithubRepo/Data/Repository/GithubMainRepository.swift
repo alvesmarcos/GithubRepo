@@ -11,8 +11,10 @@ import RxSwift
 
 class GithubMainRepository: GithubRepository {
     private let dataSource: GithubDataSource
-    private(set) var repositories: BehaviorRelay<[Repository]>
-    private(set) var state: BehaviorRelay<FetchState>
+    private let disposeBag = DisposeBag()
+
+    let repositories: BehaviorRelay<[Repository]>
+    let state: BehaviorRelay<FetchState>
 
     init(dataSource: GithubDataSource = RemoteGithubDataSource()) {
         self.dataSource = dataSource
@@ -29,15 +31,17 @@ class GithubMainRepository: GithubRepository {
     }
 
     func fetchRepositories(with query: String) {
-        handleChangeState(.loading)
-        self.dataSource.getRepositories(with: query) { [weak self] response in
-            switch response {
-            case .success(let repositoriesResponse):
-                self?.handleChangeRepositories(repositoriesResponse)
-                self?.handleChangeState(repositoriesResponse.isEmpty ? .empty: .content)
-            case .failure:
-                self?.handleChangeState(.error)
-            }
-        }
+        self.handleChangeState(.loading)
+        self.dataSource.getRepositories(with: query)
+            .subscribe(
+                onSuccess: { [weak self] in
+                    self?.handleChangeRepositories($0)
+                    self?.handleChangeState($0.isEmpty ? .empty: .content)
+                },
+                onFailure: { [weak self] _ in
+                    self?.handleChangeState(.error)
+                }
+            )
+            .disposed(by: disposeBag)
     }
 }

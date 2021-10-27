@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RxSwift
 
 class RemoteGithubDataSource: GithubDataSource {
     private let service: GithubFetcher
@@ -14,15 +15,10 @@ class RemoteGithubDataSource: GithubDataSource {
         self.service = service
     }
 
-    func getRepositories(with query: String, completion: @escaping (Result<[Repository], Error>) -> Void) {
-        service.fetchRepositories(with: query) { response in
-            switch response {
-            case .success(let searchRepositoriesResponse):
-                let repositories = searchRepositoriesResponse.items.map { RepositoryResponseMapper.map($0) }
-                completion(.success(repositories))
-            case .failure(let error):
-                completion(.failure(error))
+    func getRepositories(with query: String) -> Single<[Repository]> {
+        return self.service.fetchRepositories(with: query)
+            .map { response in
+                response.1.items.map { RepositoryResponseMapper.map($0) }
             }
-        }
     }
 }

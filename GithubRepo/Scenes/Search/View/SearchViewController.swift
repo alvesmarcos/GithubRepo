@@ -123,8 +123,9 @@ class SearchViewController: UIViewController {
 
 extension SearchViewController {
     func subscribeSearchState() {
-        searchViewModel?.state.subscribe(onNext: { value -> Void in
-            DispatchQueue.main.async { [weak self] in
+        searchViewModel?.state
+            .asDriver()
+            .drive { [weak self] value in
                 switch value {
                 case .inital:
                     self?.handleSearchInitialState()
@@ -138,16 +139,15 @@ extension SearchViewController {
                     self?.handleSearchContentState()
                 }
             }
-        })
         .disposed(by: disposeBag)
     }
 
     func subscribeTableData() {
-        guard let table = tableView else {
+        guard let tableView = self.tableView else {
             return
         }
         searchViewModel?.repositoryCellViewModels.bind(
-            to: table.rx.items(
+            to: tableView.rx.items(
                 cellIdentifier: RepositoryTableViewCell.kTableViewCellIdentifier,
                 cellType: RepositoryTableViewCell.self
             )) { _, item, cell in
