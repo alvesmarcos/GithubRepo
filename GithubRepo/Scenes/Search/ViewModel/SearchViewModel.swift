@@ -6,26 +6,27 @@
 //
 
 import Foundation
+import RxRelay
+import RxSwift
 
 class SearchViewModel: ViewModelSearching {
     // MARK: - Attributes
 
+    private let disposeBag = DisposeBag()
     private var githubRepository: GithubRepository
-    private(set) var repositoryCellViewModels: [RepositoryCellViewModel]
-    private(set) var loading: Bool
-    private(set) var error: Bool
+    private(set) var repositoryCellViewModels: BehaviorRelay<[RepositoryCellViewModel]>
+    private(set) var state: BehaviorRelay<FetchState>
     private weak var coordinator: SearchCoordinator?
-    weak var delegate: SearchViewModelDelegate?
 
     // MARK: - Constructors
 
     init(coordinator: SearchCoordinator, repository: GithubRepository = GithubMainRepository()) {
         self.coordinator = coordinator
-        self.repositoryCellViewModels = []
-        self.loading = false
-        self.error = false
+        self.repositoryCellViewModels = BehaviorRelay(value: [])
+        self.state = BehaviorRelay(value: .inital)
         self.githubRepository = repository
-        self.githubRepository.delegate = self
+
+        self.bindRepository()
     }
 
     // MARK: - Methods
@@ -33,23 +34,16 @@ class SearchViewModel: ViewModelSearching {
     func fetchRepositories(query: String) {
         githubRepository.fetchRepositories(with: query)
     }
-}
 
-// MARK: - Notifications from Repository
-
-extension SearchViewModel: GithubRepositoryDelegate {
-    func didChangeLoading(loading: Bool) {
-        self.loading = loading
-        self.delegate?.onChangeSearchLoadingState(isLoading: loading)
-    }
-
-    func didChangeRepositories(repositories: [Repository]) {
-        self.repositoryCellViewModels = repositories.map { RepositoryCellViewModel(repository: $0) }
-        self.delegate?.onChangeSearchRepository(repoCellViewModels: self.repositoryCellViewModels)
-    }
-
-    func didChangeError(error: Bool) {
-        self.error = error
-        self.delegate?.onChangeSearchError(error: error)
+    private func bindRepository() {
+        githubRepository.state
+            .bind(to: self.state)
+            .disposed(by: disposeBag)
+        githubRepository.repositories
+            .map({ repos in
+               repos.map { RepositoryCellViewModel(repository: $0) }
+            })
+            .bind(to: self.repositoryCellViewModels)
+            .disposed(by: disposeBag)
     }
 }

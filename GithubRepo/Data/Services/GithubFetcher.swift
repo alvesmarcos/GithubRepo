@@ -6,7 +6,8 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol GithubFetcher {
-    func fetchRepositories(with query: String, completion: @escaping(Result<SearchRepoResponse, Error>) -> Void)
+    func fetchRepositories(with query: String) -> Single<(HTTPURLResponse, SearchRepoResponse)>
 }

@@ -5,6 +5,9 @@
 //  Created by Marcos Alves on 07/09/21.
 //
 
+import RxCocoa
+import RxRelay
+import RxSwift
 import UIKit
 
 class SearchViewController: UIViewController {
@@ -18,6 +21,7 @@ class SearchViewController: UIViewController {
 
     // MARK: - Attributes
 
+    private let disposeBag = DisposeBag()
     private var searchViewModel: SearchViewModel?
     private var searchTimer: Timer?
 
@@ -48,6 +52,8 @@ class SearchViewController: UIViewController {
         super.viewDidLoad()
 
         registerTableViewCell()
+        subscribeSearchState()
+        subscribeTableData()
         prepareUI()
     }
 
@@ -55,7 +61,6 @@ class SearchViewController: UIViewController {
 
     func bindViewModel(to viewModel: SearchViewModel) {
         self.searchViewModel = viewModel
-        self.searchViewModel?.delegate = self
     }
 
     // MARK: - Setup
@@ -71,8 +76,6 @@ class SearchViewController: UIViewController {
     }
 
     private func registerTableViewCell() {
-        tableView?.delegate = self
-        tableView?.dataSource = self
         tableView?.register(
             UINib(
                 nibName: RepositoryTableViewCell.kTableViewCellIdentifier,
@@ -85,74 +88,72 @@ class SearchViewController: UIViewController {
     // MARK: - Helper Methods
 
     private func handleSearchInitialState() {
+        self.spinner.stopAnimating()
         self.stateView?.isHidden = false
         self.stateTextView?.text = kInitialSearchStateText
         self.stateImageView?.image = UIImage(named: "Bookmark")
     }
 
     private func handleSearchEmptyState() {
+        self.spinner.stopAnimating()
         self.stateView?.isHidden = false
         self.stateTextView?.text = kEmptySearchStateText
         self.stateImageView?.image = UIImage(named: "BookmarkMad")
     }
 
     private func handleSearchErrorState() {
+        self.spinner.stopAnimating()
         self.stateView?.isHidden = false
         self.stateTextView?.text = kErrorSearchStateText
         self.stateImageView?.image = UIImage(named: "BookmarkError")
     }
-}
 
-// MARK: - Notifications from View Model
-
-extension SearchViewController: SearchViewModelDelegate {
-    func onChangeSearchError(error: Bool) {
-        DispatchQueue.main.async {
-            if error {
-                self.handleSearchErrorState()
-            }
-        }
+    private func handleSearchLoadingState() {
+        self.spinner.startAnimating()
+        self.stateView?.isHidden = true
     }
 
-    func onChangeSearchLoadingState(isLoading: Bool) {
-        DispatchQueue.main.async {
-            if isLoading {
-                self.spinner.startAnimating()
-            } else {
-                self.spinner.stopAnimating()
-            }
-        }
-    }
-
-    func onChangeSearchRepository(repoCellViewModels: [RepositoryCellViewModel]) {
-        DispatchQueue.main.async {
-            if repoCellViewModels.isEmpty {
-                self.handleSearchEmptyState()
-            } else {
-                self.stateView?.isHidden = true
-                self.tableView?.reloadData()
-            }
-        }
+    private func handleSearchContentState() {
+        self.spinner.stopAnimating()
+        self.stateView?.isHidden = true
     }
 }
 
-// MARK: - Table View Extension
+// MARK: - Handle Notifications from View Model
 
-extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchViewModel?.repositoryCellViewModels.count ?? 0
+extension SearchViewController {
+    func subscribeSearchState() {
+        searchViewModel?.state
+            .asDriver()
+            .drive { [weak self] value in
+                switch value {
+                case .inital:
+                    self?.handleSearchInitialState()
+                case .loading:
+                    self?.handleSearchLoadingState()
+                case .error:
+                    self?.handleSearchErrorState()
+                case .empty:
+                    self?.handleSearchEmptyState()
+                case .content:
+                    self?.handleSearchContentState()
+                }
+            }
+        .disposed(by: disposeBag)
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: RepositoryTableViewCell.kTableViewCellIdentifier
-        ) as? RepositoryTableViewCell, indexPath.row < self.searchViewModel?.repositoryCellViewModels.count ?? 0 else {
-            return RepositoryTableViewCell()
+    func subscribeTableData() {
+        guard let tableView = self.tableView else {
+            return
         }
-        if let repositoryViewModel = self.searchViewModel?.repositoryCellViewModels[indexPath.row] {
-            cell.setupCell(with: repositoryViewModel)
+        searchViewModel?.repositoryCellViewModels.bind(
+            to: tableView.rx.items(
+                cellIdentifier: RepositoryTableViewCell.kTableViewCellIdentifier,
+                cellType: RepositoryTableViewCell.self
+            )) { _, item, cell in
+            cell.setupCell(with: item)
         }
-        return cell
+        .disposed(by: disposeBag)
     }
 }
 

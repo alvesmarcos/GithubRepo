@@ -6,7 +6,8 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol GithubDataSource {
-    func getRepositories(with query: String, completion: @escaping (Result<[Repository], Error>) -> Void)
+    func getRepositories(with query: String) -> Single<[Repository]>
 }

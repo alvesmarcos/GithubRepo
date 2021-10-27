@@ -7,25 +7,18 @@
 
 import Alamofire
 import Foundation
+import RxAlamofire
+import RxSwift
 
 struct GithubFetcherConstants {
     static let kUrl = "https://api.github.com/search/repositories"
 }
 
 struct RemoteGithubFetcher: GithubFetcher {
-    func fetchRepositories(with query: String, completion: @escaping(Result<SearchRepoResponse, Error>) -> Void) {
+    func fetchRepositories(with query: String) -> Single<(HTTPURLResponse, SearchRepoResponse)> {
         guard let url = URL(string: GithubFetcherConstants.kUrl) else {
-            completion(.failure(URLError(.badURL)))
-            return
+            return Single.error(URLError(.badURL))
         }
-        AF.request(url, method: .get, parameters: ["q": query])
-            .responseDecodable(of: SearchRepoResponse.self) { response in
-                switch response.result {
-                case .success(let data):
-                    completion(.success(data))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
+        return RxAlamofire.requestDecodable(.get, url, parameters: ["q": query]).asSingle()
     }
 }

@@ -10,7 +10,7 @@ import UIKit
 
 class AppCoordinator: Coordinator {
     var isCompleted: (() -> Void)?
-    
+
     var childCoordinators = [Coordinator]()
 
     private let window: UIWindow

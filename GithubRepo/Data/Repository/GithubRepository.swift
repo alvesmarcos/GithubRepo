@@ -6,18 +6,15 @@
 //
 
 import Foundation
+import RxRelay
 
-protocol GithubRepositoryDelegate: AnyObject {
-    func didChangeLoading(loading: Bool)
-    func didChangeRepositories(repositories: [Repository])
-    func didChangeError(error: Bool)
+enum FetchState {
+    case loading, error, content, empty, inital
 }
 
 protocol GithubRepository {
-    var delegate: GithubRepositoryDelegate? { get set }
-    var repositories: [Repository] { get }
-    var loading: Bool { get }
-    var error: Bool { get }
+    var repositories: BehaviorRelay<[Repository]> { get }
+    var state: BehaviorRelay<FetchState> { get }
 
     func fetchRepositories(with query: String)
 }

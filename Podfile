@@ -9,4 +9,7 @@ target 'GithubRepo' do
   pod 'Alamofire'
   pod 'Kingfisher'
   pod 'SwiftLint'
+  pod 'RxSwift'
+  pod 'RxCocoa'
+  pod 'RxAlamofire'
 end

@@ -10,7 +10,7 @@ import UIKit
 
 class AboutCoordinator: NavigationCoordinator {
     var isCompleted: (() -> Void)?
-    
+
     var rootViewController: UINavigationController
 
     var childCoordinators = [Coordinator]()
